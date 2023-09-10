@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import "./App.css"
+import { v4 } from 'uuid';
 
 export default function App() {
   const [todos, setTodos] = useState([]);
   const [currentTodo, setCurrentTodo] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   // Loads the todos from the LocalStorage during page refresh
   useEffect(() => {
@@ -15,6 +16,11 @@ export default function App() {
     }
   }, []);
 
+  // to generate a new unique id
+  function generateNewId() {
+    return v4()
+  }
+
   // Adds a new todo
   function addTodos(item) {
     if (item === '') {
@@ -24,33 +30,30 @@ export default function App() {
     let todoObj = {
       name: item,
       isCompleted: false,
-      todoIndex: currentIndex,
+      todoId: generateNewId(), // using the unique id
     };
     setTodos([...todos, todoObj]);
     // Stores the todos in localStorage
     localStorage.setItem('todos', JSON.stringify([...todos, todoObj]));
     setCurrentTodo('');
-    setCurrentIndex(currentIndex + 1);
   }
 
   // Deletes a todo
-  function deleteTodo(index) {
-    let indexOfDeletedTodo = index;
-    // Removes the todo as per index number
-    let temp = todos.splice(index, 1);
+  function deleteTodo(id) {
 
-    // Update the todo index numbers once a todo has been deleted
-    for (let i = indexOfDeletedTodo; i < todos.length; i++) {
-      todos[i].todoIndex = todos[i].todoIndex - 1;
-    }
-    setTodos([...todos]);
-    localStorage.setItem('todos', JSON.stringify(todos));
+    // creating a new list temp list which will return a new list without the deleted item.
+    let temp = todos.filter((item) => {
+      return item.todoId != id;
+    })
+
+    setTodos([...temp]);
+    localStorage.setItem('todos', JSON.stringify([...temp]));
   }
 
   //  Marks a todo as completed
-  function toggleCompleted(indexNumber) {
+  function toggleCompleted(id) {
     let tempTodos = todos.map((item) => {
-      if (item.todoIndex === indexNumber) {
+      if (item.todoId === id) {
         item.isCompleted = !item.isCompleted;
       }
       return item;
@@ -61,59 +64,59 @@ export default function App() {
 
   return (
     <div className='App'>
-      <h1>Simple Todo App</h1>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          addTodos(currentTodo);
-        }}
-      >
-        <input
-          style={{ width: '50vw' }}
-          type='text'
-          value={currentTodo}
-          onChange={(e) => setCurrentTodo(e.target.value)}
-          placeholder='Enter your todos here....'
-        />
-      </form>
-      {todos.map((todoItem) => {
-        return (
-          <div
-            style={{
-              border: 'solid lightgray 2px',
-              margin: '10px',
-              width: '50vw',
-            }}
-            key={todoItem.todoIndex}
-          >
-            <input
-              onChange={() => toggleCompleted(todoItem.todoIndex)}
-              type='checkbox'
-              id='myCheckbox'
-              name='myCheckbox'
-              value='true'
-            />
-            <span
-              style={
-                todoItem.isCompleted ? { textDecoration: 'line-through' } : {}
-              }
-            >
-              {todoItem.name}
-            </span>
-            <span
-              onClick={() => deleteTodo(todoItem.todoIndex)}
-              style={{
-                color: 'red',
-                position: 'relative',
-                left: '40px',
-                cursor: 'pointer',
-              }}
-            >
-              X
-            </span>
-          </div>
-        );
-      })}
+      <h1 className='heading'>Simple Todo App</h1>
+      <div className='item-container'>
+        <form
+          className='input-form'
+          onSubmit={(e) => {
+            e.preventDefault();
+            addTodos(currentTodo);
+          }}
+        >
+          <input
+            className='todo-input'
+            type='text'
+            value={currentTodo}
+            onChange={(e) => setCurrentTodo(e.target.value)}
+            placeholder='Enter your todos here....'
+          />
+          <button className='add-btn'>Add</button>
+        </form>
+        <div className='list-container'>
+          {todos.map((todoItem) => {
+            return (
+              <div
+                className='list-item-card'
+                key={todoItem.todoId}
+              >
+                <div className='item-details'>
+                  <input
+                    onChange={() => toggleCompleted(todoItem.todoId)}
+                    type='checkbox'
+                    id='myCheckbox'
+                    name='myCheckbox'
+                    value='true'
+                    checked={todoItem.isCompleted}
+                  />
+                  <p
+                    style={
+                      todoItem.isCompleted ? { textDecoration: 'line-through' } : {}
+                    }
+                  >
+                    {todoItem.name}
+                  </p>
+                </div>
+                <button
+                  onClick={() => deleteTodo(todoItem.todoId)}
+                  className='delete-btn'
+                >
+                  <img src="/delete.png" alt="" />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
