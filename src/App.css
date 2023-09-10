@@ -1,42 +1,88 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 100px;
+  background-color: #3d3d49;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.heading {
+  color: white;
+  font-size: 42px;
+  margin-bottom: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.item-container {
+  background-color: #232228;
+  padding: 20px;
+  border-radius: 20px;
+  min-width: 50%;
 }
 
-.card {
-  padding: 2em;
+.input-form {
+  display: flex;
+  margin-bottom: 30px;
 }
 
-.read-the-docs {
-  color: #888;
+.todo-input {
+  padding: 10px 15px;
+  border-radius: 10px 0px 0px 10px;
+  border: 2px solid #3d3d49;
+  background-color: #3d3d49;
+  width: 100%;
+  color: white;
+}
+
+.todo-input:focus{
+  outline: 1px solid transparent;
+}
+.todo-input::placeholder {
+  color: white;
+}
+
+.add-btn{
+  border-radius: 0px 10px 10px 0px;
+  padding-inline: 10px;
+  border: none;
+  background-color: #3168df;
+  color: white;
+  font-weight: bold;
+}
+
+.list-container{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.list-item-card {
+  padding: 8px;
+  background-color: #50505f;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.delete-btn{
+  background-color: transparent;
+  border: none;
+  height: 20px;
+}
+
+.delete-btn > img{
+  height: 100%;
+}
+
+.item-details{
+  display: flex;
+  gap: 10px;
+  color: rgb(221, 221, 221);
+  font-weight: bold;
 }
