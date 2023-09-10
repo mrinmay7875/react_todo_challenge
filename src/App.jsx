@@ -89,6 +89,11 @@ export default function App() {
 }
 
 const TodoItem = ({ task, setTodos, todos }) => {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleEditing = () => {
+    setIsEditing(!isEditing);
+  }
   const handelToggleStatus = () => {
     const updatedTodos = todos.map((todo) =>
       todo.id === task.id ? { ...task, isCompleted: !task.isCompleted } : todo
@@ -104,6 +109,12 @@ const TodoItem = ({ task, setTodos, todos }) => {
     localStorage.setItem('todos', JSON.stringify(todos));
   };
 
+  const handleEditInput = (e) => {
+    const newTasks = todos.map((todo) => todo.id === task.id ? {...task, name: e.target.value} : todo);
+    setTodos(newTasks)
+
+  }
+
   return (
     <li className='todoItem'>
       <input
@@ -114,11 +125,14 @@ const TodoItem = ({ task, setTodos, todos }) => {
         name='myCheckbox'
         value='true'
       />
-      {!task.isCompleted ? (
-        <p className='task--undone'>{task.name}</p>
-      ) : (
-        <s className='task--done'>{task.name}</s>
-      )}
+      {!task.isCompleted ? 
+      <>{isEditing ? <input onChange={handleEditInput} className='task--editInput' type='text' value={task.name}/> : <p className='task--undone'>{task.name}</p> }</> 
+      : <s className='task--done'>{task.name}</s> }
+        
+       
+        
+      
+      {!task.isCompleted && <i className={`task--edit bx ${isEditing ? 'bx-save' : 'bx-edit'} `} onClick={handleEditing}></i>}
       <i className='task--delete bx bx-trash' onClick={handelDeleteTodo}></i>
     </li>
   );
