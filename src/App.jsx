@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
-import "./App.css";
+import { useState, useEffect } from 'react';
+import { v4 as uuid } from 'uuid';
+import './App.css';
 
 export default function App() {
   const [todos, setTodos] = useState([]);
   const [isDark, setIsDark] = useState(true);
-  const [currentTodo, setCurrentTodo] = useState("");
+  const [currentTodo, setCurrentTodo] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Loads the todos from the LocalStorage during page refresh
   useEffect(() => {
-    let tempData = localStorage.getItem("todos");
+    let tempData = localStorage.getItem('todos');
     if (tempData) {
       setTodos(JSON.parse(tempData));
     } else {
@@ -19,78 +20,69 @@ export default function App() {
 
   // Adds a new todo
   function addTodos(item) {
-    if (item === "") {
-      alert("Empty todos are not allowed");
+    if (item === '') {
+      alert('Empty todos are not allowed');
       return;
     }
     let todoObj = {
+      id: uuid(),
       name: item,
       isCompleted: false,
-      todoIndex: currentIndex,
+      todoIndex: Math.random(),
     };
     setTodos([...todos, todoObj]);
     // Stores the todos in localStorage
-    localStorage.setItem("todos", JSON.stringify([...todos, todoObj]));
-    setCurrentTodo("");
+
+    localStorage.setItem('todos', JSON.stringify([...todos, todoObj]));
+    setCurrentTodo('');
     setCurrentIndex(currentIndex + 1);
   }
 
-  // Deletes a todo
-  function deleteTodo(index) {
-    let indexOfDeletedTodo = index;
-    // Removes the todo as per index number
-    let temp = todos.splice(index, 1);
-
-    // Update the todo index numbers once a todo has been deleted
-    for (let i = indexOfDeletedTodo; i < todos.length; i++) {
-      todos[i].todoIndex = todos[i].todoIndex - 1;
-    }
-    setTodos([...todos]);
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }
-
-  console.log(todos);
-
   return (
-    <div className={`App ${!isDark ? "dark" : ""}`}>
-      <header className="header">
-        <div className="header__content">
-          <h1 className="header__content--title">Simple Todo App</h1>
+    <div className={`App ${!isDark ? 'dark' : ''}`}>
+      <header className='header'>
+        <div className='header__content'>
+          <h1 className='header__content--title'>Simple Todo App</h1>
           <i
             onClick={() => setIsDark(!isDark)}
             className={`header__content--icon bx ${
-              isDark ? "bx-moon" : "bx-sun"
+              isDark ? 'bx-moon' : 'bx-sun'
             }`}
           ></i>
         </div>
       </header>
-      <main className="main">
-        <div className="main__content">
+      <main className='main'>
+        <div className='main__content'>
           <form
-            className="main__content--form"
+            className='main__content--form'
             onSubmit={(e) => {
               e.preventDefault();
               addTodos(currentTodo);
             }}
           >
-            <div className="inputControl">
+            <div className='inputControl'>
               <input
-                className="main__content--input"
-                type="text"
+                className='main__content--input'
+                type='text'
                 value={currentTodo}
                 onChange={(e) => setCurrentTodo(e.target.value)}
-                placeholder="Enter your todos here...."
+                placeholder='Enter your todos here....'
               />
               <i
-                className="main__content--inputSend bx bxs-send"
+                className='main__content--inputSend bx bxs-send'
                 onClick={() => addTodos(currentTodo)}
               ></i>
             </div>
           </form>
 
-          <ul className="main__todoList">
+          <ul className='main__todoList'>
             {todos.map((task) => (
-              <TodoItem task={task} setTodos={setTodos} todos={todos} />
+              <TodoItem
+                key={task.id}
+                task={task}
+                setTodos={setTodos}
+                todos={todos}
+              />
             ))}
           </ul>
         </div>
@@ -102,69 +94,35 @@ export default function App() {
 const TodoItem = ({ task, setTodos, todos }) => {
   const handelToggleStatus = () => {
     const updatedTodos = todos.map((todo) =>
-      todo.name === task.name
-        ? { ...task, isCompleted: !task.isCompleted }
-        : todo
+      todo.id === task.id ? { ...task, isCompleted: !task.isCompleted } : todo
     );
     setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(todos));
+    localStorage.setItem('todos', JSON.stringify(todos));
   };
 
   const handelDeleteTodo = () => {
     const updatedTodos = todos.filter((todo) => todo.name !== task.name);
 
     setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(todos));
+    localStorage.setItem('todos', JSON.stringify(todos));
   };
 
   return (
-    <li className="todoItem">
+    <li className='todoItem'>
       <input
         onChange={handelToggleStatus}
-        className="task--check"
-        type="checkbox"
-        id="myCheckbox"
-        name="myCheckbox"
-        value="true"
+        className='task--check'
+        type='checkbox'
+        id='myCheckbox'
+        name='myCheckbox'
+        value='true'
       />
       {!task.isCompleted ? (
-        <p className="task--undone">{task.name}</p>
+        <p className='task--undone'>{task.name}</p>
       ) : (
-        <s className="task--done">{task.name}</s>
+        <s className='task--done'>{task.name}</s>
       )}
-      <i className="task--delete bx bx-trash" onClick={handelDeleteTodo}></i>
+      <i className='task--delete bx bx-trash' onClick={handelDeleteTodo}></i>
     </li>
   );
 };
-
-// {
-//   todos.map((todoItem) => {
-//     return (
-//       <div key={todoItem.todoIndex}>
-//         <input
-//           onChange={() => toggleCompleted(todoItem.todoIndex)}
-//           type="checkbox"
-//           id="myCheckbox"
-//           name="myCheckbox"
-//           value="true"
-//         />
-//         <span
-//           style={todoItem.isCompleted ? { textDecoration: "line-through" } : {}}
-//         >
-//           {todoItem.name}
-//         </span>
-//         <span
-//           onClick={() => deleteTodo(todoItem.todoIndex)}
-//           style={{
-//             color: "red",
-//             position: "relative",
-//             left: "40px",
-//             cursor: "pointer",
-//           }}
-//         >
-//           X
-//         </span>
-//       </div>
-//     );
-//   });
-// }

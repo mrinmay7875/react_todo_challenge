@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +6,7 @@
 }
 
 :root {
-  font-family: "ROBOTO", sans-serif;
+  font-family: 'ROBOTO', sans-serif;
   --bg-primary: #ffffff; /* Background primary */
   --bg-secondary: #e8e8e8; /* Background secondary */
   --text-body: #333333; /* Text body */
