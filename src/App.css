@@ -96,6 +96,7 @@
   display: flex;
   border-radius: 8px;
   align-items: center;
+  justify-content: flex-end;
   gap: 1rem;
   padding: 1rem;
   color: var(--text-body);
@@ -103,23 +104,38 @@
 
 .task--done {
   color: var(--text-success);
+  margin-right: auto!important;
 }
 .task--check {
   cursor: pointer;
   width: 1.5rem;
 }
 
-.task--delete {
+.task--delete,.task--edit {
   cursor: pointer;
   color: var(--text-body);
-  margin-left: auto;
+  
   font-size: 1.3rem;
   transition: color 0.3s ease;
 }
 
+
 .task--delete:hover {
   opacity: 0.5;
   color: var(--text-error);
+}
+
+.task--edit:hover {
+  opacity: 0.5;
+  color: var(--text-info);
+}
+
+
+.task--editInput{
+  margin-right: auto;
+}
+.task--undone{
+  margin-right: auto!important;
 }
 
 /* media----------------------------- */
