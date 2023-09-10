@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 export default function App() {
   const [todos, setTodos] = useState([]);
   const [currentTodo, setCurrentTodo] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   // Loads the todos from the LocalStorage during page refresh
   useEffect(() => {
@@ -24,27 +23,21 @@ export default function App() {
     let todoObj = {
       name: item,
       isCompleted: false,
-      todoIndex: currentIndex,
+      todoIndex: Math.random(),
     };
     setTodos([...todos, todoObj]);
     // Stores the todos in localStorage
     localStorage.setItem('todos', JSON.stringify([...todos, todoObj]));
     setCurrentTodo('');
-    setCurrentIndex(currentIndex + 1);
   }
 
   // Deletes a todo
   function deleteTodo(index) {
-    let indexOfDeletedTodo = index;
-    // Removes the todo as per index number
-    let temp = todos.splice(index, 1);
-
-    // Update the todo index numbers once a todo has been deleted
-    for (let i = indexOfDeletedTodo; i < todos.length; i++) {
-      todos[i].todoIndex = todos[i].todoIndex - 1;
-    }
-    setTodos([...todos]);
-    localStorage.setItem('todos', JSON.stringify(todos));
+    let tempTodos = todos.filter((item) => {
+      return item.todoIndex !== index;
+    });
+    setTodos([...tempTodos]);
+    localStorage.setItem('todos', JSON.stringify(tempTodos));
   }
 
   //  Marks a todo as completed
@@ -89,9 +82,6 @@ export default function App() {
             <input
               onChange={() => toggleCompleted(todoItem.todoIndex)}
               type='checkbox'
-              id='myCheckbox'
-              name='myCheckbox'
-              value='true'
             />
             <span
               style={
