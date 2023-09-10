@@ -6,7 +6,6 @@ export default function App() {
   const [todos, setTodos] = useState([]);
   const [isDark, setIsDark] = useState(true);
   const [currentTodo, setCurrentTodo] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   // Loads the todos from the LocalStorage during page refresh
   useEffect(() => {
@@ -28,14 +27,12 @@ export default function App() {
       id: uuid(),
       name: item,
       isCompleted: false,
-      todoIndex: Math.random(),
     };
     setTodos([...todos, todoObj]);
     // Stores the todos in localStorage
 
     localStorage.setItem('todos', JSON.stringify([...todos, todoObj]));
     setCurrentTodo('');
-    setCurrentIndex(currentIndex + 1);
   }
 
   return (
