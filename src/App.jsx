@@ -6,12 +6,10 @@ export default function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   function addTodos(item) {
-    // console.log('item', item);
-    // if (!item);
-    // {
-    //   alert('Please enter a valid todo');
-    //   return;
-    // }
+    if (item === '') {
+      alert('Empty todos are not allowed');
+      return;
+    }
     let todoObj = {
       name: item,
       isCompleted: false,
@@ -52,10 +50,6 @@ export default function App() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (currentTodo === '' || currentTodo === '') {
-            alert('Empty todos are not allowed');
-            return;
-          }
           addTodos(currentTodo);
         }}
       >
