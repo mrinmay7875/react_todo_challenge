@@ -1,10 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function App() {
   const [todos, setTodos] = useState([]);
   const [currentTodo, setCurrentTodo] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Loads the todos from the LocalStorage during page refresh
+  useEffect(() => {
+    let tempData = localStorage.getItem('todos');
+    if (tempData) {
+      setTodos(JSON.parse(tempData));
+    } else {
+      setTodos([]);
+    }
+  }, []);
+
+  // Adds a new todo
   function addTodos(item) {
     if (item === '') {
       alert('Empty todos are not allowed');
@@ -15,22 +26,25 @@ export default function App() {
       isCompleted: false,
       todoIndex: currentIndex,
     };
-    todos.push(todoObj);
-    setTodos([...todos]);
+    setTodos([...todos, todoObj]);
+    // Stores the todos in localStorage
+    localStorage.setItem('todos', JSON.stringify([...todos, todoObj]));
     setCurrentTodo('');
     setCurrentIndex(currentIndex + 1);
   }
 
-  // ! Delete a todo
+  // Deletes a todo
   function deleteTodo(index) {
     let indexOfDeletedTodo = index;
+    // Removes the todo as per index number
     let temp = todos.splice(index, 1);
 
-    // Update the todo index numbers once the todo has been deleted
+    // Update the todo index numbers once a todo has been deleted
     for (let i = indexOfDeletedTodo; i < todos.length; i++) {
       todos[i].todoIndex = todos[i].todoIndex - 1;
     }
     setTodos([...todos]);
+    localStorage.setItem('todos', JSON.stringify(todos));
   }
 
   //  Marks a todo as completed
@@ -42,6 +56,7 @@ export default function App() {
       return item;
     });
     setTodos([...tempTodos]);
+    localStorage.setItem('todos', JSON.stringify(todos));
   }
 
   return (
