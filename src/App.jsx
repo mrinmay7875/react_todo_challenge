@@ -99,20 +99,20 @@ const TodoItem = ({ task, setTodos, todos }) => {
       todo.id === task.id ? { ...task, isCompleted: !task.isCompleted } : todo
     );
     setTodos(updatedTodos);
-    localStorage.setItem('todos', JSON.stringify(todos));
+    localStorage.setItem('todos', JSON.stringify(updatedTodos));
   };
 
   const handelDeleteTodo = () => {
     const updatedTodos = todos.filter((todo) => todo.name !== task.name);
 
     setTodos(updatedTodos);
-    localStorage.setItem('todos', JSON.stringify(todos));
+    localStorage.setItem('todos', JSON.stringify(updatedTodos));
   };
 
   const handleEditInput = (e) => {
     const newTasks = todos.map((todo) => todo.id === task.id ? {...task, name: e.target.value} : todo);
     setTodos(newTasks)
-
+    localStorage.setItem('todos', JSON.stringify(newTasks));
   }
 
   return (
@@ -124,6 +124,7 @@ const TodoItem = ({ task, setTodos, todos }) => {
         id='myCheckbox'
         name='myCheckbox'
         value='true'
+        checked={task.isCompleted}
       />
       {!task.isCompleted ? 
       <>{isEditing ? <input onChange={handleEditInput} className='task--editInput' type='text' value={task.name}/> : <p className='task--undone'>{task.name}</p> }</> 
